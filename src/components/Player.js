@@ -8,15 +8,17 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
-  //Ref - grab some html tag like audio
+  //*Ref - grab some html tag like audio
+  //variable that stores songs audio
   const audioRef = useRef(null);
 
-  //Event Handlers
+  //*Event Handlers
   const playSongHandler = () => {
     isPlaying ? audioRef.current.pause() : audioRef.current.play();
     setIsPlaying(!isPlaying);
   };
 
+  //onTimeUpdate store target.currentTime and target.duration and update setSongInfo
   const timeUpdateHandler = e => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
@@ -30,12 +32,14 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
     );
   };
 
+  //when draging input bar update the audio current time(so we can resume audio from specific minute)
+  //also update songs current time to that specific value
   const dragHandler = e => {
     audioRef.current.currentTime = e.target.value;
     setSongInfo({ ...songInfo, currentTime: e.target.value });
   };
 
-  //State
+  //*State
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
     duration: 0,
