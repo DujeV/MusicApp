@@ -7,7 +7,13 @@ import {
   faPause,
 } from '@fortawesome/free-solid-svg-icons';
 
-const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
+const Player = ({
+  currentSong,
+  setCurrentSong,
+  isPlaying,
+  setIsPlaying,
+  songs,
+}) => {
   //*Ref - grab some html tag like audio
   //variable that stores songs audio
   const audioRef = useRef(null);
@@ -48,6 +54,35 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
     }
   };
 
+  const skipTrackHandler = direction => {
+    //find an index of a current song
+    let currentIndex = songs.findIndex(item => item.id === currentSong.id);
+
+    if (direction === 'skip-forward') {
+      if (currentIndex < songs.length - 1) {
+        currentIndex = currentIndex + 1;
+      } else {
+        currentIndex = 0;
+      }
+    }
+
+    if (direction === 'skip-back') {
+      if (currentIndex > 0) {
+        currentIndex = currentIndex - 1;
+      } else {
+        currentIndex = songs.length - 1;
+      }
+    }
+    setCurrentSong(songs[currentIndex]);
+
+    //looping through songs to update style in library section when we click to play previous or next song
+    songs.map(item => {
+      return songs[currentIndex].id === item.id
+        ? (item.active = true)
+        : (item.active = false);
+    });
+  };
+
   //*State
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
@@ -68,7 +103,12 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
         <p>{getTime(songInfo.duration || 0)}</p>
       </div>
       <div className='play-control'>
-        <FontAwesomeIcon className='skip-back' size='2x' icon={faAngleLeft} />
+        <FontAwesomeIcon
+          onClick={() => skipTrackHandler('skip-back')}
+          className='skip-back'
+          size='2x'
+          icon={faAngleLeft}
+        />
 
         <FontAwesomeIcon
           onClick={playSongHandler}
@@ -78,6 +118,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
         />
 
         <FontAwesomeIcon
+          onClick={() => skipTrackHandler('skip-forward')}
           className='skip-forward'
           size='2x'
           icon={faAngleRight}
