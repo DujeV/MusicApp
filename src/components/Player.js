@@ -65,7 +65,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
           onChange={dragHandler}
           type='range'
         />
-        <p>{getTime(songInfo.duration || 0.0)}</p>
+        <p>{getTime(songInfo.duration || 0)}</p>
       </div>
       <div className='play-control'>
         <FontAwesomeIcon className='skip-back' size='2x' icon={faAngleLeft} />
