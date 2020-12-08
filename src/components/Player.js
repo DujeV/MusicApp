@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPlay,
@@ -39,6 +39,15 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
     setSongInfo({ ...songInfo, currentTime: e.target.value });
   };
 
+  //this is for songs that are selected from library list
+  //when song info is loaded (onLoadedData) check if the button is play (which means isPlaying)
+  //or it is pause so it will not run (!isPlaying)
+  const autoPlayHandler = () => {
+    if (isPlaying) {
+      audioRef.current.play();
+    }
+  };
+
   //*State
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
@@ -56,7 +65,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
           onChange={dragHandler}
           type='range'
         />
-        <p>{getTime(songInfo.duration)}</p>
+        <p>{getTime(songInfo.duration || 0.0)}</p>
       </div>
       <div className='play-control'>
         <FontAwesomeIcon className='skip-back' size='2x' icon={faAngleLeft} />
@@ -73,13 +82,14 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
           size='2x'
           icon={faAngleRight}
         />
+        <audio
+          onLoadedData={autoPlayHandler}
+          onTimeUpdate={timeUpdateHandler}
+          onLoadedMetadata={timeUpdateHandler}
+          ref={audioRef}
+          src={currentSong.audio}
+        ></audio>
       </div>
-      <audio
-        onTimeUpdate={timeUpdateHandler}
-        onLoadedMetadata={timeUpdateHandler}
-        ref={audioRef}
-        src={currentSong.audio}
-      ></audio>
     </div>
   );
 };
