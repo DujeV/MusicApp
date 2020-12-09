@@ -35,17 +35,11 @@ const Player = ({
   const timeUpdateHandler = e => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
-    //Calculate percentage
-    const roundedCurrent = Math.round(current);
-    const roundedDuration = Math.round(duration);
-    const animationPercentage = Math.round(
-      (roundedCurrent / roundedDuration) * 100
-    );
+
     setSongInfo({
       ...songInfo,
       currentTime: current,
       duration: duration,
-      animationPercentage: animationPercentage,
     });
   };
 
@@ -92,6 +86,7 @@ const Player = ({
       }
     }
     setCurrentSong(songs[currentIndex]);
+    autoPlayHandler();
 
     //looping through songs to update style in library section when we click to play previous or next song
     songs.map(item => {
@@ -101,10 +96,10 @@ const Player = ({
     });
   };
 
-  //Animate track
-  const trackAnim = {
-    transform: `translateX(${songInfo.animationPercentage}%)`,
-  };
+  // Animate track
+  const animationPercentage = Math.round(
+    (songInfo.currentTime / songInfo.duration) * 100
+  );
 
   return (
     <div className='player-container'>
@@ -123,7 +118,10 @@ const Player = ({
             onChange={dragHandler}
             type='range'
           />
-          <div style={trackAnim} className='animate-track'></div>
+          <div
+            style={{ transform: `translateX(${animationPercentage}%)` }}
+            className='animate-track'
+          ></div>
         </div>
         <p>{songInfo.duration ? getTime(songInfo.duration) : '0:00'}</p>
       </div>
@@ -152,6 +150,7 @@ const Player = ({
           onLoadedData={autoPlayHandler}
           onTimeUpdate={timeUpdateHandler}
           onLoadedMetadata={timeUpdateHandler}
+          onEnded={() => skipTrackHandler('skip-forward')}
           ref={audioRef}
           src={currentSong.audio}
         ></audio>
