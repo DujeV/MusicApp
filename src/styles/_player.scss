@@ -9,11 +9,23 @@
 .time-control {
   width: 50%;
   display: flex;
+  align-items: center;
 
   input {
     width: 100%;
-    padding: 1rem 0rem;
+    -webkit-appearance: none;
+    background: transparent;
+    cursor: pointer;
   }
+  input:focus {
+    outline: none;
+  }
+  input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+  }
+
   p {
     padding: 1rem;
   }
@@ -28,4 +40,23 @@
   svg {
     cursor: pointer;
   }
+}
+.track {
+  background: lightblue;
+  width: 100%;
+  height: 1rem;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+.animate-track {
+  background: rgb(204, 204, 204);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(0%);
+  padding: 1rem;
+  pointer-events: none;
 }

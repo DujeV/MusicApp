@@ -14,6 +14,13 @@ const Player = ({
   setIsPlaying,
   songs,
 }) => {
+  //*State
+  const [songInfo, setSongInfo] = useState({
+    currentTime: 0,
+    duration: 0,
+    animationPercentage: 0,
+  });
+
   //*Ref - grab some html tag like audio
   //variable that stores songs audio
   const audioRef = useRef(null);
@@ -28,7 +35,18 @@ const Player = ({
   const timeUpdateHandler = e => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
-    setSongInfo({ ...songInfo, currentTime: current, duration: duration });
+    //Calculate percentage
+    const roundedCurrent = Math.round(current);
+    const roundedDuration = Math.round(duration);
+    const animationPercentage = Math.round(
+      (roundedCurrent / roundedDuration) * 100
+    );
+    setSongInfo({
+      ...songInfo,
+      currentTime: current,
+      duration: duration,
+      animationPercentage: animationPercentage,
+    });
   };
 
   // Formating time to get minutes and seconds
@@ -83,24 +101,31 @@ const Player = ({
     });
   };
 
-  //*State
-  const [songInfo, setSongInfo] = useState({
-    currentTime: 0,
-    duration: 0,
-  });
+  //Animate track
+  const trackAnim = {
+    transform: `translateX(${songInfo.animationPercentage}%)`,
+  };
 
   return (
     <div className='player-container'>
       <div className='time-control'>
         <p>{getTime(songInfo.currentTime)}</p>
-        <input
-          min={0}
-          max={songInfo.duration || 0}
-          value={songInfo.currentTime}
-          onChange={dragHandler}
-          type='range'
-        />
-        <p>{songInfo.duration ? getTime(songInfo.duration || 0) : '0:00'}</p>
+        <div
+          style={{
+            background: `linear-gradient(to right, ${currentSong.color[0]},${currentSong.color[1]})`,
+          }}
+          className='track'
+        >
+          <input
+            min={0}
+            max={songInfo.duration || 0}
+            value={songInfo.currentTime}
+            onChange={dragHandler}
+            type='range'
+          />
+          <div style={trackAnim} className='animate-track'></div>
+        </div>
+        <p>{songInfo.duration ? getTime(songInfo.duration) : '0:00'}</p>
       </div>
       <div className='play-control'>
         <FontAwesomeIcon
