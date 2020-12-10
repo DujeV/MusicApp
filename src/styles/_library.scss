@@ -14,16 +14,39 @@
   transition: all 0.5s ease;
   opacity: 0;
 }
+.active-library {
+  transform: translateX(0%);
+  opacity: 1;
+}
 
 .library-song {
   display: flex;
   align-items: center;
-  padding: 1rem 2rem 1rem 2rem;
-  transition: background 0.5s ease;
+  padding: 1rem;
   cursor: pointer;
-  img {
+
+  .song-cover {
     width: 30%;
+
+    img {
+      object-fit: contain;
+      width: 100%;
+    }
   }
+
+  .song-description {
+    padding-left: 1rem;
+
+    .song-name {
+      font-size: 1.2rem;
+    }
+
+    .song-artist {
+      font-size: 0.8rem;
+      font-weight: 400;
+    }
+  }
+
   &:hover {
     background: rgb(222, 222, 255);
   }
@@ -33,6 +56,11 @@
   padding-left: 1rem;
 }
 
+.selected {
+  background: rgb(164, 179, 221);
+}
+
+//SCROLLBAR STYLING
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
@@ -48,14 +76,6 @@
   background-color: rgba(155, 155, 155, 0.5);
   border-radius: 20px;
   border: transparent;
-}
-
-.selected {
-  background: rgb(164, 179, 221);
-}
-.active-library {
-  transform: translateX(0%);
-  opacity: 1;
 }
 
 @media screen and (max-width: 768px) {
